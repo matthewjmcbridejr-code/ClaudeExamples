@@ -3,6 +3,9 @@
 
 This is intentionally local and deterministic: it demonstrates the operating
 model without requiring API keys, private projects, or live autonomous agents.
+
+The script carries the same client idea through each stage so the handoff trail
+is coherent and safe to screen share.
 """
 
 from __future__ import annotations
@@ -29,6 +32,33 @@ def clean_block(text: str) -> str:
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(clean_block(content), encoding="utf-8")
+
+
+def watcher_output(idea: str) -> str:
+    return f"""
+    # Watcher Output — Task Routing
+
+    ## Input idea
+
+    {idea}
+
+    ## Classification
+
+    This is a product-foundation request, not an immediate coding task.
+
+    ## Route
+
+    1. Advisor first: define product direction, users, MVP scope, and open decisions.
+    2. Builder second: turn approved direction into repo structure, implementation tasks, and acceptance criteria.
+    3. Reviewer third: catch missing requirements, privacy risks, overbuilding, and weak assumptions.
+    4. Deploy/Ops fourth: prepare QA, release, rollback, and maintenance guidance.
+    5. Handoff last: summarize the first milestone and next action.
+
+    ## Reason
+
+    The LifeOS idea includes household data, permissions, shared display behavior,
+    and future integrations. Those decisions should be clarified before code is generated.
+    """
 
 
 def advisor_output(idea: str) -> str:
@@ -61,13 +91,14 @@ def advisor_output(idea: str) -> str:
     - Child/Dependent: sees assigned tasks and approved display-safe items.
     - Guest/Helper: sees only tasks or schedule items assigned to them.
 
-    ## MVP features
+    ## MVP features for this idea
 
     - household member setup
     - create and assign tasks
     - recurring task support
     - shared calendar summary
-    - display-safe daily dashboard
+    - shared asset booking direction
+    - display-safe daily e-paper dashboard
     - basic permissions
 
     ## Open questions
@@ -80,13 +111,22 @@ def advisor_output(idea: str) -> str:
     ## Next decision needed
 
     Approve Phase 1 scope: household members, tasks, simple calendar summary,
-    and display-safe daily view.
+    display-safe daily view, and a deferred Phase 2 path for shared asset bookings.
     """
 
 
-def builder_output() -> str:
-    return """
+def builder_output(idea: str, advisor_summary: str) -> str:
+    return f"""
     # Builder Output — Buildable Project Plan
+
+    ## Input idea
+
+    {idea}
+
+    ## Build direction from Advisor
+
+    The Advisor recommends starting with household members, task assignment,
+    shared calendar summary, basic permissions, and display-safe e-paper output.
 
     ## Proposed repo structure
 
@@ -95,6 +135,7 @@ def builder_output() -> str:
     ├── docs/
     │   ├── product-brief.md
     │   ├── mvp-roadmap.md
+    │   ├── user-roles.md
     │   └── display-rules.md
     ├── app/
     │   ├── dashboard/
@@ -114,12 +155,13 @@ def builder_output() -> str:
 
     ## Phase 1 implementation tasks
 
-    1. Create household/member data model.
-    2. Create task data model with owner, assignee, due date, recurrence, and status.
+    1. Create household/member model.
+    2. Create task model with owner, assignee, due date, recurrence, and status.
     3. Create task list and daily dashboard views.
     4. Create calendar summary model.
     5. Create display-safe endpoint: `GET /api/display/today`.
     6. Add permission rules for owner/admin, adult member, child, and helper.
+    7. Document shared asset booking as Phase 2 unless the client promotes it to Phase 1.
 
     ## Initial data model
 
@@ -139,19 +181,25 @@ def builder_output() -> str:
     - Child/dependent cannot edit household settings.
     - Private calendar details do not appear in the e-paper display payload.
     - Display endpoint returns only approved daily summary data.
+    - Shared asset booking is scoped clearly as Phase 2 unless approved for Phase 1.
     """
 
 
-def reviewer_output() -> str:
-    return """
+def reviewer_output(idea: str, builder_summary: str) -> str:
+    return f"""
     # Reviewer Output — Quality Gate
+
+    ## Reviewed idea
+
+    {idea}
 
     ## What is good
 
     - The MVP is focused on tasks, calendar, and display-safe summaries.
     - User roles are defined before implementation.
     - E-paper display privacy is treated as a first-class requirement.
-    - The build plan avoids overbuilding autonomous agents too early.
+    - Shared assets are acknowledged without forcing them into Phase 1 too early.
+    - The build plan avoids overbuilding autonomous agents before the core workflow is useful.
 
     ## What is risky
 
@@ -159,6 +207,7 @@ def reviewer_output() -> str:
     - Shared asset bookings need conflict rules before implementation.
     - Child/helper permissions must be tested carefully.
     - E-paper hardware choice can affect display payload and refresh cadence.
+    - If all LifeOS ideas are built at once, the first milestone will become too broad.
 
     ## Required fixes before build
 
@@ -166,6 +215,7 @@ def reviewer_output() -> str:
     2. Define whether children can mark tasks complete without approval.
     3. Define what private data must never appear on shared display.
     4. Define first shared asset category or defer assets to Phase 2.
+    5. Confirm whether the first deliverable is the Claude setup foundation, app prototype, or both.
 
     ## Suggested tests
 
@@ -174,19 +224,24 @@ def reviewer_output() -> str:
     - Private calendar exclusion test
     - Display endpoint safe-payload test
     - Recurring task generation test
+    - Shared asset booking conflict test for Phase 2
 
     ## Approval status
 
     Revise before implementation. Product direction is strong, but Phase 1
-    permissions and display privacy rules should be confirmed first.
+    permissions, calendar source, and display privacy rules should be confirmed first.
     """
 
 
-def ops_output() -> str:
-    return """
+def ops_output(idea: str, reviewer_summary: str) -> str:
+    return f"""
     # Deploy/Ops Output — Readiness Plan
 
-    ## Environment requirements
+    ## Project direction
+
+    {idea}
+
+    ## Environment requirements for a future app build
 
     - application runtime
     - database connection
@@ -226,10 +281,15 @@ def ops_output() -> str:
     - acceptance tests
     - deployment checklist
     - decision log
+
+    ## Safe first operational milestone
+
+    Build the LifeOS Claude/project foundation first, then decide which parts
+    should become real Claude Code workflows, MCP tools, or deployment helpers.
     """
 
 
-def summary_output(run_name: str) -> str:
+def summary_output(run_name: str, idea: str) -> str:
     return f"""
     # LifeOS Agent Workflow Run Summary
 
@@ -237,12 +297,17 @@ def summary_output(run_name: str) -> str:
 
     `{run_name}`
 
+    ## Input idea
+
+    {idea}
+
     ## Pipeline
 
-    Idea → Advisor → Builder → Reviewer → Deploy/Ops → Handoff
+    Idea → Watcher → Advisor → Builder → Reviewer → Deploy/Ops → Handoff
 
     ## Files produced
 
+    - `00-watcher-route.md`
     - `01-advisor-output.md`
     - `02-builder-output.md`
     - `03-reviewer-output.md`
@@ -251,23 +316,28 @@ def summary_output(run_name: str) -> str:
 
     ## What this demo proves
 
-    - The workflow can separate product thinking from build planning.
+    - The workflow can separate routing, product thinking, build planning, review, and deployment readiness.
     - Claude roles can be saved as reusable project instructions.
     - Work can pass through review gates before implementation.
     - The system can create a clean handoff trail in a repo.
+    - The same LifeOS idea is carried through each stage of the handoff.
 
     ## What this demo does not claim
 
     - It does not claim the LifeOS app is built.
     - It does not use real private credentials.
     - It does not run uncontrolled autonomous agents.
-    - It is a safe proof of workflow structure.
+    - It is a safe local proof of workflow structure.
     """
 
 
-def handoff_output() -> str:
-    return """
+def handoff_output(idea: str) -> str:
+    return f"""
     # Handoff — Proposed First Client Milestone
+
+    ## Client idea
+
+    {idea}
 
     ## Milestone goal
 
@@ -277,7 +347,7 @@ def handoff_output() -> str:
     ## Deliverables
 
     - Claude workspace/project structure
-    - Advisor / Builder / Reviewer / Deploy-Ops role prompts
+    - Watcher / Advisor / Builder / Reviewer / Deploy-Ops role prompts
     - LifeOS product brief
     - MVP roadmap
     - feature breakdown
@@ -312,13 +382,20 @@ def main() -> int:
     run_name = datetime.now(timezone.utc).strftime("lifeos-run-%Y%m%d-%H%M%S")
     run_dir = RUNS_DIR / run_name
 
+    watcher = watcher_output(args.idea)
+    advisor = advisor_output(args.idea)
+    builder = builder_output(args.idea, advisor)
+    reviewer = reviewer_output(args.idea, builder)
+    ops = ops_output(args.idea, reviewer)
+
     stages = [
-        ("Advisor", "01-advisor-output.md", advisor_output(args.idea)),
-        ("Builder", "02-builder-output.md", builder_output()),
-        ("Reviewer", "03-reviewer-output.md", reviewer_output()),
-        ("Deploy/Ops", "04-deploy-ops-output.md", ops_output()),
-        ("Handoff", "handoff.md", handoff_output()),
-        ("Summary", "README.md", summary_output(run_name)),
+        ("Watcher", "00-watcher-route.md", watcher),
+        ("Advisor", "01-advisor-output.md", advisor),
+        ("Builder", "02-builder-output.md", builder),
+        ("Reviewer", "03-reviewer-output.md", reviewer),
+        ("Deploy/Ops", "04-deploy-ops-output.md", ops),
+        ("Handoff", "handoff.md", handoff_output(args.idea)),
+        ("Summary", "README.md", summary_output(run_name, args.idea)),
     ]
 
     print("LifeOS Claude Build System — Agent Pipeline Demo")
