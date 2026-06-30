@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LifeOS Static Prototype</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">LifeOS Static Prototype</p>
+      <h1>Today at Home</h1>
+      <p class="subhead">A simple preview of household tasks, calendar items, shared assets, and an e-paper display view.</p>
+    </div>
+    <div class="status-card">
+      <span class="status-dot"></span>
+      <strong>Display-safe summary ready</strong>
+      <small>Private notes hidden from shared screen</small>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Household Members</h2>
+        <span>4 active</span>
+      </div>
+      <div id="members" class="member-grid"></div>
+    </section>
+
+    <section class="panel wide">
+      <div class="panel-head">
+        <h2>Today's Tasks</h2>
+        <span id="task-count"></span>
+      </div>
+      <div id="tasks" class="task-list"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Shared Calendar</h2>
+        <span>Today</span>
+      </div>
+      <div id="calendar" class="stack"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Shared Assets</h2>
+        <span>Bookings</span>
+      </div>
+      <div id="assets" class="stack"></div>
+    </section>
+
+    <section class="panel epaper wide">
+      <div class="panel-head">
+        <h2>E-paper Display Preview</h2>
+        <span>Kitchen screen</span>
+      </div>
+      <div class="display-frame">
+        <div class="display-top">
+          <strong>LifeOS · Today</strong>
+          <span id="display-date"></span>
+        </div>
+        <div id="epaper-summary" class="display-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
