@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LifeOS Claude Build System</title>
+  <style>
+    :root { --bg:#f7f9fc; --panel:#fff; --ink:#172033; --muted:#5b677a; --line:#d8e0ec; --blue:#246bfe; --green:#14865f; --purple:#6d4aff; --orange:#bd6b00; --shadow:0 18px 45px rgba(20,31,52,.08); }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:radial-gradient(circle at top,#eaf1ff 0,#f7f9fc 42%); color:var(--ink); line-height:1.5; }
+    header { padding:64px 24px 36px; text-align:center; }
+    .eyebrow { display:inline-flex; padding:7px 12px; border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.86); color:var(--blue); font-weight:800; font-size:13px; }
+    h1 { margin:18px auto 12px; max-width:980px; font-size:clamp(38px,5vw,68px); line-height:.98; letter-spacing:-.055em; }
+    .sub { margin:0 auto; max-width:850px; color:var(--muted); font-size:19px; }
+    main { width:min(1120px, calc(100% - 32px)); margin:0 auto 72px; }
+    section { margin-top:26px; background:rgba(255,255,255,.84); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:28px; }
+    h2 { margin:0 0 8px; font-size:28px; letter-spacing:-.035em; }
+    h3 { margin:0 0 8px; font-size:19px; letter-spacing:-.02em; }
+    p, li, span { color:var(--muted); }
+    .grid { display:grid; gap:16px; }
+    .grid-4 { grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .grid-3 { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .grid-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px; min-height:100%; }
+    .card ul { padding-left:18px; margin:10px 0 0; }
+    .badge { display:inline-block; font-size:12px; font-weight:850; letter-spacing:.05em; text-transform:uppercase; margin-bottom:10px; }
+    .advisor .badge,.advisor h3 { color:var(--blue); } .builder .badge,.builder h3 { color:var(--green); } .reviewer .badge,.reviewer h3 { color:var(--purple); } .ops .badge,.ops h3 { color:var(--orange); }
+    .highlight { border-color:rgba(36,107,254,.24); background:linear-gradient(180deg,#fff,#f2f6ff); }
+    .flow { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:18px; }
+    .pill { padding:12px 14px; border-radius:999px; border:1px solid var(--line); background:#fff; font-weight:800; color:#22304a; }
+    .arrow { color:var(--blue); font-weight:900; }
+    .deliverable { display:flex; gap:12px; align-items:flex-start; padding:14px 0; border-bottom:1px solid var(--line); }
+    .deliverable:last-child { border-bottom:0; }
+    .check { width:26px; height:26px; border-radius:50%; background:#e9f2ff; color:var(--blue); display:grid; place-items:center; font-weight:900; flex:0 0 auto; }
+    pre { background:#101828; color:#e6edf7; border-radius:16px; padding:18px; overflow:auto; font-size:13px; line-height:1.55; }
+    code, pre { font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin:18px 0; }
+    button { border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:10px 14px; cursor:pointer; font-weight:800; }
+    button.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .tab-panel { display:none; } .tab-panel.active { display:block; }
+    .footer-note { text-align:center; color:var(--muted); font-size:14px; padding:26px; }
+    @media (max-width:900px) { .grid-4,.grid-3,.grid-2 { grid-template-columns:1fr; } section { padding:20px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">Custom proof of concept for Abdulmohsen's LifeOS idea</div>
+    <h1>LifeOS Claude Build System</h1>
+    <p class="sub">A practical advisor → build → review → deploy workflow for turning family app ideas into organized software projects, reusable Claude instructions, and future MCP-enabled tooling.</p>
+  </header>
+  <main>
+    <section class="highlight">
+      <h2>What this proves</h2>
+      <p>This is not a finished LifeOS app. It is a customized foundation showing how the Claude setup would be organized around the actual project idea: household tasks, shared calendars, shared assets, bookings, permissions, and an eventual e-paper display.</p>
+      <div class="flow"><span class="pill">Idea</span><span class="arrow">→</span><span class="pill">Product brief</span><span class="arrow">→</span><span class="pill">MVP roadmap</span><span class="arrow">→</span><span class="pill">Build tasks</span><span class="arrow">→</span><span class="pill">Review gate</span><span class="arrow">→</span><span class="pill">Deploy/Ops guide</span></div>
+    </section>
+    <section>
+      <h2>Claude role system</h2>
+      <p>Instead of one messy chat, the setup separates Claude into reusable job-specific roles.</p>
+      <div class="grid grid-4">
+        <div class="card advisor"><div class="badge">Role 01</div><h3>Advisor</h3><p>Turns rough app ideas into decisions, specs, risks, and next steps.</p><ul><li>User roles</li><li>MVP scope</li><li>Feature decisions</li><li>Open questions</li></ul></div>
+        <div class="card builder"><div class="badge">Role 02</div><h3>Builder</h3><p>Turns approved specs into repo structure, tasks, implementation plans, and code prompts.</p><ul><li>Frontend/backend plan</li><li>Database schema</li><li>API routes</li><li>Acceptance tests</li></ul></div>
+        <div class="card reviewer"><div class="badge">Role 03</div><h3>Reviewer</h3><p>Checks quality before work is accepted, merged, or handed off.</p><ul><li>Missing requirements</li><li>Bad assumptions</li><li>Security gaps</li><li>Overbuilt features</li></ul></div>
+        <div class="card ops"><div class="badge">Role 04</div><h3>Deploy/Ops</h3><p>Prepares deployment, QA, release notes, rollback, and maintenance workflow.</p><ul><li>Environment checklist</li><li>Release workflow</li><li>Rollback plan</li><li>Maintenance guide</li></ul></div>
+      </div>
+    </section>
+    <section>
+      <h2>LifeOS project scope</h2>
+      <div class="grid grid-3">
+        <div class="card"><h3>Household tasks</h3><p>Assign tasks to household members, track ownership, due dates, completion, and recurring chores.</p></div>
+        <div class="card"><h3>Calendar</h3><p>Shared family calendar view with important tasks, events, reminders, and display-ready summaries.</p></div>
+        <div class="card"><h3>Shared assets</h3><p>Manage family resources such as rooms, vehicles, equipment, or shared items with booking rules.</p></div>
+        <div class="card"><h3>Permissions</h3><p>Household owner/admin, adult member, child/dependent, guest/helper roles with controlled access.</p></div>
+        <div class="card"><h3>Mobile app direction</h3><p>Simple task, calendar, and booking flows before adding advanced automation or complex integrations.</p></div>
+        <div class="card"><h3>E-paper display</h3><p>Low-noise home display for today's tasks, calendar, assigned owners, and refresh schedule.</p></div>
+      </div>
+    </section>
+    <section>
+      <h2>Sample role prompts</h2>
+      <p>Examples of reusable Claude instructions that become project files the client can maintain and reuse.</p>
+      <div class="tabs"><button class="active" onclick="showTab(event,'advisor')">Advisor</button><button onclick="showTab(event,'builder')">Builder</button><button onclick="showTab(event,'reviewer')">Reviewer</button><button onclick="showTab(event,'ops')">Deploy/Ops</button></div>
+      <div id="advisor" class="tab-panel active"><pre>You are the Advisor for the LifeOS family management app.\n\nYour job is to turn rough ideas into clear product decisions.\n\nFocus on household user roles, task workflows, calendar behavior, shared asset booking rules, MVP scope, risks, tradeoffs, and open questions.\n\nDo not write code unless asked.\n\nOutput: Summary, recommended direction, key features, open questions, next decision needed.</pre></div>
+      <div id="builder" class="tab-panel"><pre>You are the Builder for the LifeOS family management app.\n\nUse approved specs only.\n\nFocus on repo structure, implementation tasks, frontend/backend plan, database schema, API routes, and testable acceptance criteria.\n\nOutput: files/folders needed, implementation steps, code plan, tests, and build risks.</pre></div>
+      <div id="reviewer" class="tab-panel"><pre>You are the Reviewer for the LifeOS family management app.\n\nCheck for missing requirements, weak assumptions, security issues, unclear acceptance criteria, overbuilt features, and missing tests.\n\nOutput: what is good, risky, missing, required fixes, and approval status.</pre></div>
+      <div id="ops" class="tab-panel"><pre>You are the Deploy/Ops assistant for LifeOS.\n\nFocus on environment setup, deployment checklist, QA steps, release notes, rollback plan, and maintenance guide.\n\nDo not expose secrets or suggest unsafe shortcuts.</pre></div>
+    </section>
+    <section>
+      <h2>Repo and docs structure</h2>
+      <p>The first milestone would produce a structure like this, filled in around the LifeOS app.</p>
+      <pre>lifeos-claude-build-system/
+├── README.md
+├── demo.html
+├── agents/
+│   ├── advisor.md
+│   ├── builder.md
+│   ├── reviewer.md
+│   └── deploy-ops.md
+├── lifeos/
+│   ├── product-brief.md
+│   ├── user-roles.md
+│   ├── mvp-roadmap.md
+│   ├── feature-map.md
+│   └── epaper-display-plan.md
+├── workflows/
+│   ├── idea-to-spec.md
+│   ├── spec-to-build-tasks.md
+│   ├── review-gate.md
+│   └── deploy-readiness.md
+└── mcp/
+    ├── tool-registry.md
+    └── future-mcp-server-plan.md</pre>
+    </section>
+    <section>
+      <h2>What the first foundation would include</h2>
+      <div class="grid grid-2">
+        <div><div class="deliverable"><span class="check">✓</span><div><strong>Claude workspace structure</strong><br><span>Organized around LifeOS instead of generic prompting.</span></div></div><div class="deliverable"><span class="check">✓</span><div><strong>Advisor / Builder / Reviewer / Deploy roles</strong><br><span>Reusable instructions for different stages of app development.</span></div></div><div class="deliverable"><span class="check">✓</span><div><strong>LifeOS product brief and MVP roadmap</strong><br><span>Initial product direction, user roles, features, and scope.</span></div></div></div>
+        <div><div class="deliverable"><span class="check">✓</span><div><strong>Repository and documentation workflow</strong><br><span>Clear folders, specs, build tasks, review gates, and handoff docs.</span></div></div><div class="deliverable"><span class="check">✓</span><div><strong>MCP/tooling direction</strong><br><span>A staged plan for future tools, memory/context, and deployment helpers.</span></div></div><div class="deliverable"><span class="check">✓</span><div><strong>Training walkthrough</strong><br><span>A guided explanation so the client can keep using and extending the system.</span></div></div></div>
+      </div>
+    </section>
+    <div class="footer-note">Prepared as a sanitized proof of concept for the LifeOS Claude Build System discussion.</div>
+  </main>
+  <script>function showTab(event,id){document.querySelectorAll('button').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}</script>
+</body>
+</html>
